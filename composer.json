@@ -1,0 +1,17 @@
+{
+    "name": "chen/xhgui-header",
+    "description": "sdadfadsf",
+    "autoload": {
+        "psr-4": {
+        }
+    },
+    "authors": [
+        {
+            "name": "刘臣让",
+            "email": "877702999@qq.com"
+        }
+    ],
+    "require": {
+        "ext-curl"
+    }
+}
