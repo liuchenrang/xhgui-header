@@ -10,6 +10,7 @@
   - 是否开启
 - XHGUI_CONFIG_EXTENSION
   - 使用的扩展
+  - 
 - XHGUI_CONFIG_SAVER_URL
   - 数据采集地址
 - XHGUI_CONFIG_PERCENT
@@ -22,3 +23,11 @@
 ## 使用注意事项
 
 - 项目代码需要跑在php-fpm模式下
+- php-fpm 配置示例
+
+```php
+; env[XHGUI_CONFIG_DEBUG] = $XHGUI_CONFIG_DEBUG
+; env[XHGUI_CONFIG_SHOULD_RUN] = $XHGUI_CONFIG_SHOULD_RUN
+; env[XHGUI_CONFIG_EXTENSION] = $XHGUI_CONFIG_EXTENSION
+; env[XHGUI_CONFIG_PERCENT] = $XHGUI_CONFIG_PERCENT
+```

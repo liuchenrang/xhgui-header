@@ -1,9 +1,10 @@
 <?php
-if(getenv('XHGUI_CONFIG_DEBUG'))
+$is_debug = getenv('XHGUI_CONFIG_DEBUG');
+if($is_debug)
 {
     ini_set('display_errors',1);
 }
-if (getenv('XHGUI_CONFIG_SHOULD_RUN')) {
+if (!getenv('XHGUI_CONFIG_SHOULD_RUN')) {
     error_log('xhgui 关闭状态，不采集！ ' );
     return;
 }
@@ -41,7 +42,8 @@ $saverHandler = function_exists("_XhguiHeader_Saver") ? _XhguiHeader_Saver : fun
             'http' => array(
                 'header'  => "Content-type: application/json",
                 'method'  => 'POST',
-                'content' => json_encode($data),
+                'content' => json_encode($data,true),
+                // 'content' => json_encode(['dd'=>1]),
                 'timeout' => $timeout?$timeout:4,
             ),
         );
@@ -91,7 +93,7 @@ if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
 }
 
 register_shutdown_function(
-    function () {
+    function () use($simpleUrlProcess,$saverHandler){
         $extension =  getenv('XHGUI_CONFIG_EXTENSION');
         if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
@@ -145,20 +147,21 @@ register_shutdown_function(
 
         $requestTs = array('sec' => $time, 'usec' => 0);
         $requestTsMicro = array('sec' => $requestTimeFloat[0], 'usec' => $requestTimeFloat[1]);
-
         $data['meta'] = array(
             'url' => $uri,
             'SERVER' => $_SERVER,
             'get' => $_GET,
             'env' => $_ENV,
-            'simple_url' => simpleUrlProcess($uri),
+            'simple_url' => $simpleUrlProcess($uri),
             'request_ts' => $requestTs,
             'request_ts_micro' => $requestTsMicro,
             'request_date' => date('Y-m-d', $time),
         );
 
         try {
-            saverHandler($data);
+           $result = $saverHandler($data);
+           error_log("saver result: ".json_encode($result));
+
         } catch (Exception $e) {
             error_log('xhgui - ' . $e->getMessage());
         }
