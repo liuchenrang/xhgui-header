@@ -3,9 +3,9 @@ function hConfig($key){
     return isset($_SERVER[$key])?$_SERVER[$key]:'';
 }
 function hLog($content){
-    $is_debug = hConfig('XHGUI_CONFIG_DEBUG');
+    global $is_debug;
     if($is_debug){
-        hLog($content);
+        error_log($content);
     }
 }
 $is_debug = hConfig('XHGUI_CONFIG_DEBUG');

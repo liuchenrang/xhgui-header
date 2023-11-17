@@ -30,8 +30,33 @@
 ; env[XHGUI_CONFIG_SHOULD_RUN] = $XHGUI_CONFIG_SHOULD_RUN
 ; env[XHGUI_CONFIG_EXTENSION] = $XHGUI_CONFIG_EXTENSION
 ; env[XHGUI_CONFIG_PERCENT] = $XHGUI_CONFIG_PERCENT
-```
+; env[XHGUI_CONFIG_SAVER_URL] = $XHGUI_CONFIG_SAVER_URL
 
+env[XHGUI_CONFIG_DEBUG] = 1
+env[XHGUI_CONFIG_SHOULD_RUN] = 1
+env[XHGUI_CONFIG_EXTENSION] = tideways_xhprof
+env[XHGUI_CONFIG_PERCENT] =  100
+env[XHGUI_CONFIG_SAVER_URL] =  http://xhgui.gaia888.com/saver.php
+```
+```nginx
+fastcgi_param  XHGUI_CONFIG_DEBUG 1 
+fastcgi_param  XHGUI_CONFIG_SHOULD_RUN 1 
+fastcgi_param  XHGUI_CONFIG_EXTENSION 1 
+fastcgi_param  XHGUI_CONFIG_PERCENT 1 
+fastcgi_param  XHGUI_CONFIG_SAVER_URL http://web-xhgui.dnmp-plus.orb.local/saver.php     
+
+···
+
+```docker-compose
+# 注意项目 需要销毁容器 重新创建
+        restart: always
+        environment:
+        - XHGUI_CONFIG_DEBUG=0
+        - XHGUI_CONFIG_SHOULD_RUN=1
+        - XHGUI_CONFIG_EXTENSION=tideways_xhprof
+        - XHGUI_CONFIG_PERCENT=100      
+        - XHGUI_CONFIG_SAVER_URL=http://web-xhgui.dnmp-plus.orb.local/saver.php     
+···
 ```php
 
 <?php
