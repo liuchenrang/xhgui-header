@@ -49,7 +49,7 @@ env[XHGUI_CONFIG_DEBUG] = 1
 env[XHGUI_CONFIG_SHOULD_RUN] = 1
 env[XHGUI_CONFIG_EXTENSION] = tideways_xhprof
 env[XHGUI_CONFIG_PERCENT] =  100
-env[XHGUI_CONFIG_SAVER_URL] =  http://xhgui.gaia888.com/saver.php
+env[XHGUI_CONFIG_SAVER_URL] =   http://web-xhgui.dnmp-plus.orb.local/saver.php     
 ```
 ```nginx
 fastcgi_param  XHGUI_CONFIG_DEBUG 1 
