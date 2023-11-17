@@ -23,8 +23,8 @@
 ## 使用注意事项
 
 - 项目代码需要跑在php-fpm模式下
-- php-fpm 配置示例
 
+- php-fpm 配置示例
 ```php
 ; env[XHGUI_CONFIG_DEBUG] = $XHGUI_CONFIG_DEBUG
 ; env[XHGUI_CONFIG_SHOULD_RUN] = $XHGUI_CONFIG_SHOULD_RUN

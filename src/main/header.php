@@ -1,28 +1,37 @@
 <?php
-$is_debug = getenv('XHGUI_CONFIG_DEBUG');
+function hConfig($key){
+    return isset($_SERVER[$key])?$_SERVER[$key]:'';
+}
+function hLog($content){
+    $is_debug = hConfig('XHGUI_CONFIG_DEBUG');
+    if($is_debug){
+        hLog($content);
+    }
+}
+$is_debug = hConfig('XHGUI_CONFIG_DEBUG');
 if($is_debug)
 {
     ini_set('display_errors',1);
 }
-if (!getenv('XHGUI_CONFIG_SHOULD_RUN')) {
-    error_log('xhgui 关闭状态，不采集！ ' );
+if (!hConfig('XHGUI_CONFIG_SHOULD_RUN')) {
+    hLog('xhgui 关闭状态，不采集！ ' );
     return;
 }
 
-$extension = getenv('XHGUI_CONFIG_EXTENSION');
+$extension = hConfig('XHGUI_CONFIG_EXTENSION');
 if(!$extension){
-    error_log('xhgui 环境初始化错误，没有设置要使用的扩展！ ' );
+    hLog('xhgui 环境初始化错误，没有设置要使用的扩展！ ' );
     return;
 }
-$percent = getenv('XHGUI_CONFIG_PERCENT');
+$percent = hConfig('XHGUI_CONFIG_PERCENT');
 if( rand(1,100) > $percent){
-    error_log('xhgui 百分比采集忽略！ ' );
+    hLog('xhgui 百分比采集忽略！ ' );
     return;
 }
 
 
 if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_loaded('tideways') && !extension_loaded('tideways_xhprof')) {
-    error_log('xhgui - either extension xhprof, uprofiler or tideways must be loaded');
+    hLog('xhgui - either extension xhprof, uprofiler or tideways must be loaded');
     return;
 }
 
@@ -35,8 +44,8 @@ $simpleUrlProcess = function_exists("_XhguiHeader_SimpleUrl") ? _XhguiHeader_Sim
  * @var $saverHander callable()
  */
 $saverHandler = function_exists("_XhguiHeader_Saver") ? _XhguiHeader_Saver : function($data){
-   $saveUrl =  getenv('XHGUI_CONFIG_SAVER_URL');
-   $timeout =  getenv('XHGUI_CONFIG_SAVER_URL_TIME_OUT');
+   $saveUrl =  hConfig('XHGUI_CONFIG_SAVER_URL');
+   $timeout =  hConfig('XHGUI_CONFIG_SAVER_URL_TIME_OUT');
    if($saveUrl){
         $options = array(
             'http' => array(
@@ -54,14 +63,14 @@ $saverHandler = function_exists("_XhguiHeader_Saver") ? _XhguiHeader_Saver : fun
         }
         return json_decode($result, true);
    }else{
-        error_log('xhgui 没有配置采集地址，请配置环境变量 ' );
+        hLog('xhgui 没有配置采集地址，请配置环境变量 ' );
    }
 
 };
  
 
 
-$filterPath = getenv('XHGUI_CONFIG_FILTER_PATH')?explode(',',getenv('XHGUI_CONFIG_FILTER_PATH')):[];
+$filterPath = hConfig('XHGUI_CONFIG_FILTER_PATH')?explode(',',hConfig('XHGUI_CONFIG_FILTER_PATH')):[];
 if(is_array($filterPath)&&in_array($_SERVER['DOCUMENT_ROOT'],$filterPath)){
     return;
 }
@@ -73,7 +82,7 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-$extension = getenv('XHGUI_CONFIG_EXTENSION');
+$extension = hConfig('XHGUI_CONFIG_EXTENSION');
 if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
     uprofiler_enable(UPROFILER_FLAGS_CPU | UPROFILER_FLAGS_MEMORY);
 } else if ($extension == 'tideways_xhprof' && extension_loaded('tideways_xhprof')) {
@@ -88,13 +97,13 @@ if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
         xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
     }
 }else{
-    error_log('xhgui 你指定扩展不支持！ ' );
+    hLog('xhgui 你指定扩展不支持！ ' );
     return;
 }
 
 register_shutdown_function(
     function () use($simpleUrlProcess,$saverHandler){
-        $extension =  getenv('XHGUI_CONFIG_EXTENSION');
+        $extension =  hConfig('XHGUI_CONFIG_EXTENSION');
         if ($extension == 'uprofiler' && extension_loaded('uprofiler')) {
             $data['profile'] = uprofiler_disable();
         } else if ($extension == 'tideways_xhprof' && extension_loaded('tideways_xhprof')) {
@@ -160,10 +169,10 @@ register_shutdown_function(
 
         try {
            $result = $saverHandler($data);
-           error_log("saver result: ".json_encode($result));
+           hLog("saver result: ".json_encode($result));
 
         } catch (Exception $e) {
-            error_log('xhgui - ' . $e->getMessage());
+            hLog('xhgui - ' . $e->getMessage());
         }
     }
 );
