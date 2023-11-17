@@ -17,9 +17,22 @@
   - 采集百分比
 ### 添加appdend file
 
-- append_file=src/main/header.php
-如果要自定义保存器，在append_file之前 在append_file 一个文件，定义一个全局函数 _XhguiHeader_SimpleUrl($data)
+- auto_prepend_file=src/main/header.php
+如果要自定义保存器，在auto_prepend_file之前 在auto_prepend_file 一个文件，定义一个全局函数 _XhguiHeader_SimpleUrl($data)
+- ```nginx
+    location ~ \.php$ {
+        fastcgi_pass   php81:9000;
+        fastcgi_index  index.php;
+        include        fastcgi_params;
+        fastcgi_param  PATH_INFO $fastcgi_path_info;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
 
+        fastcgi_param  PHP_VALUE "auto_prepend_file=/var/www/html/xhgui-header/header.php"; 
+    }
+```
+- ```php.ini
+    auto_prepend_file = /var/www/html/xhgui-header/header.php
+-
 ## 使用注意事项
 
 - 项目代码需要跑在php-fpm模式下
