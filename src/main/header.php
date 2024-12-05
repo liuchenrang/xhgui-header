@@ -24,11 +24,17 @@ if(!$extension){
     return;
 }
 $percent = hConfig('XHGUI_CONFIG_PERCENT');
-if( rand(1,100) > $percent){
+$xhMode = hConfig('XHGUI_CONFIG_MODE');
+// 配置百分比时为70时, 
+if( rand(1,100) > $percent && $xhMode == 1 ){
     hLog('xhgui 百分比采集忽略！ ' );
     return;
 }
-
+if($xhMode == 2){
+    if(!isset($_COOKIE['_xhprof'])){
+        return;
+    }
+}
 
 if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_loaded('tideways') && !extension_loaded('tideways_xhprof')) {
     hLog('xhgui - either extension xhprof, uprofiler or tideways must be loaded');
@@ -36,14 +42,18 @@ if (!extension_loaded('xhprof') && !extension_loaded('uprofiler') && !extension_
 }
 
 $dir = dirname(__DIR__);
-$simpleUrlProcess = function_exists("_XhguiHeader_SimpleUrl") ? _XhguiHeader_SimpleUrl : function($url){
+$simpleUrlProcess = function_exists("_XhguiHeader_SimpleUrl") ? function($data) {
+    return call_user_func('_XhguiHeader_SimpleUrl', $data);
+} : function($url){
     return preg_replace('/\=\d+/', '', $url);
 };
  
 /**
  * @var $saverHander callable()
  */
-$saverHandler = function_exists("_XhguiHeader_Saver") ? _XhguiHeader_Saver : function($data){
+$saverHandler = function_exists("_XhguiHeader_Saver") ?  function($data) {
+    return call_user_func('_XhguiHeader_Saver', $data);
+} : function($data){
    $saveUrl =  hConfig('XHGUI_CONFIG_SAVER_URL');
    $timeout =  hConfig('XHGUI_CONFIG_SAVER_URL_TIME_OUT');
    if($saveUrl){
