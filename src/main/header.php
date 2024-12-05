@@ -31,7 +31,8 @@ if( rand(1,100) > $percent && $xhMode == 1 ){
     return;
 }
 if($xhMode == 2){
-    if(!isset($_COOKIE['_xhprof'])){
+    $enblaeXhprof = isset($_REQUEST['_xhprof']) || isset($_COOKIE['_xhprof']);
+    if(!$enblaeXhprof){
         return;
     }
 }
