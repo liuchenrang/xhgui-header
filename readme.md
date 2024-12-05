@@ -15,6 +15,9 @@
   - 数据采集地址
 - XHGUI_CONFIG_PERCENT
   - 采集百分比
+- XHGUI_CONFIG_MODE
+  - 1 百分比模式
+  - 2 请求模式, cookie或请求参数携带 _xhporf  值为1
 ### 添加appdend file
 
 - auto_prepend_file=src/main/header.php
