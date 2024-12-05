@@ -10,7 +10,7 @@
   - 是否开启
 - XHGUI_CONFIG_EXTENSION
   - 使用的扩展 ，不能以点so结尾
-    - tideways_xhprof
+    - 当安装 tideways_xhprof 这里要配置 xhprof
 - XHGUI_CONFIG_SAVER_URL
   - 数据采集地址
 - XHGUI_CONFIG_PERCENT
